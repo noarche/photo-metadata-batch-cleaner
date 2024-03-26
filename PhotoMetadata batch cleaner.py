@@ -40,7 +40,7 @@ def convert_to_webp(directory_path, compression_percentage=10):
                 new_path = os.path.join(os.path.dirname(file_path), f"{title}.webp")
                 img.save(new_path, "WEBP", quality=compression_percentage)
                 os.remove(file_path)
-                print(f"Successfully converted {filename} to WebP (without metadata) & ALL JPG versions deleted.")
+                print(f"Conversion to WebP (without metadata) successful! {filename} has been deleted.")
     except Exception as e:
         print(f"Error converting images to WebP: {e}")
 
