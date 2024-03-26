@@ -19,8 +19,8 @@ def strip_metadata(image_path, delete_original, convert_to_webp, compression_per
 
         print(f"Metadata stripped and saved as: {new_path}")
 
-        # Delete the original file if requested
-        if delete_original:
+        # Delete the original file if requested and if it's not being converted to WebP
+        if delete_original and not convert_to_webp:
             os.remove(image_path)
             print("Original file deleted.")
 
@@ -29,6 +29,11 @@ def strip_metadata(image_path, delete_original, convert_to_webp, compression_per
             # Prompt user for compression percentage if converting to WebP
             img.save(new_path.replace(extension, ".webp"), "WEBP", quality=compression_percentage)
             print("Image converted to WebP format.")
+
+            # Delete the original file if requested after converting to WebP
+            if delete_original:
+                os.remove(image_path)
+                print("Original file deleted.")
 
     except Exception as e:
         print(f"Error processing {image_path}: {e}")
