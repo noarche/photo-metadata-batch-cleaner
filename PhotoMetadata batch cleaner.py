@@ -22,7 +22,7 @@ def strip_metadata(image_path, delete_original):
         # Delete the original file if requested
         if delete_original:
             os.remove(image_path)
-            print("Original file deleted.")
+            print("The JPG with metadata sucessfully deleted.")
 
         return new_path
 
@@ -40,7 +40,7 @@ def convert_to_webp(directory_path, compression_percentage=10):
                 new_path = os.path.join(os.path.dirname(file_path), f"{title}.webp")
                 img.save(new_path, "WEBP", quality=compression_percentage)
                 os.remove(file_path)
-                print(f"{filename} converted to WebP format and original file deleted.")
+                print(f"Successfully converted {filename} to WebP (without metadata) & ALL JPG versions deleted.")
     except Exception as e:
         print(f"Error converting images to WebP: {e}")
 
@@ -65,6 +65,7 @@ def process_images_in_directory(directory_path, delete_original):
     print("'°°°·.°·..·°¯°·._.··._.·°¯°·.·° .·°°°")
     print("'°°°·.°·..·°¯°·._.··._.·°¯°·.·° .·°°°")
     print("Success! Metadata Deleted from images.")
+    print("Try converting to .webp to save space!")
     print("'°°°·.°·..·°¯°·._.··._.·°¯°·.·° .·°°°")
     print("'°°°·.°·..·°¯°·._.··._.·°¯°·.·° .·°°°")
 
@@ -73,6 +74,13 @@ def process_images_in_directory(directory_path, delete_original):
     if convert_to_webp_option == 'y' or convert_to_webp_option == 'yes':
         for image_path in converted_images:
             convert_to_webp(os.path.dirname(image_path))
+
+    print("'°°°·.°·..·°¯°·._.··._.·°¯°·.·° .·°°°")
+    print("'°°°·.°·..·°¯°·._.··._.·°¯°·.·° .·°°°")
+    print("Success! JPGs Converted to webp format.")
+    print("https://github.com/noarche/photo-metadata-batch-cleaner")
+    print("'°°°·.°·..·°¯°·._.··._.·°¯°·.·° .·°°°")
+    print("'°°°·.°·..·°¯°·._.··._.·°¯°·.·° .·°°°")
 
 def main():
     # Prompt user for the directory path
@@ -87,3 +95,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
