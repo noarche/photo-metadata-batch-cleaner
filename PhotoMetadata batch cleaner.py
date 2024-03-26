@@ -41,6 +41,12 @@ def process_images_in_directory(directory_path, delete_original):
         if os.path.isfile(file_path) and (filename.lower().endswith('.webp') or filename.lower().endswith('.jpg')):
             strip_metadata(file_path, delete_original)
 
+    print("'°°°·.°·..·°¯°·._.··._.·°¯°·.·° .·°°°")
+    print("'°°°·.°·..·°¯°·._.··._.·°¯°·.·° .·°°°")
+    print("Success! Metadata Deleted from images.")
+    print("'°°°·.°·..·°¯°·._.··._.·°¯°·.·° .·°°°")
+    print("'°°°·.°·..·°¯°·._.··._.·°¯°·.·° .·°°°")
+
 def main():
     # Prompt user for the directory path
     directory_path = input("Enter the directory path with images: ").strip()
@@ -54,3 +60,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
