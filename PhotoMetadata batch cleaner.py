@@ -1,7 +1,7 @@
 from PIL import Image
 import os
 
-def strip_metadata(image_path, delete_original, convert_to_webp, compression_percentage):
+def strip_metadata(image_path, delete_original):
     try:
         # Open the image
         img = Image.open(image_path)
@@ -19,26 +19,34 @@ def strip_metadata(image_path, delete_original, convert_to_webp, compression_per
 
         print(f"Metadata stripped and saved as: {new_path}")
 
-        # Delete the original file if requested and if it's not being converted to WebP
-        if delete_original and not convert_to_webp:
+        # Delete the original file if requested
+        if delete_original:
             os.remove(image_path)
             print("Original file deleted.")
 
-        # Convert to WebP if requested
-        if convert_to_webp and (extension.lower() == '.jpg' or extension.lower() == '.jpeg'):
-            # Prompt user for compression percentage if converting to WebP
-            img.save(new_path.replace(extension, ".webp"), "WEBP", quality=compression_percentage)
-            print("Image converted to WebP format.")
-
-            # Delete the original file if requested after converting to WebP
-            if delete_original:
-                os.remove(image_path)
-                print("Original file deleted.")
+        return new_path
 
     except Exception as e:
         print(f"Error processing {image_path}: {e}")
+        return None
 
-def process_images_in_directory(directory_path, delete_original, convert_to_webp, compression_percentage):
+def convert_to_webp(directory_path, compression_percentage=10):
+    try:
+        for filename in os.listdir(directory_path):
+            file_path = os.path.join(directory_path, filename)
+            if os.path.isfile(file_path) and filename.startswith('_') and (filename.lower().endswith('.jpg') or filename.lower().endswith('.jpeg')):
+                img = Image.open(file_path)
+                title, _ = os.path.splitext(os.path.basename(file_path))
+                new_path = os.path.join(os.path.dirname(file_path), f"{title}.webp")
+                img.save(new_path, "WEBP", quality=compression_percentage)
+                os.remove(file_path)
+                print(f"{filename} converted to WebP format and original file deleted.")
+    except Exception as e:
+        print(f"Error converting images to WebP: {e}")
+
+def process_images_in_directory(directory_path, delete_original):
+    converted_images = []
+    
     # Check if the directory exists
     if not os.path.exists(directory_path):
         print(f"Directory '{directory_path}' does not exist.")
@@ -50,9 +58,21 @@ def process_images_in_directory(directory_path, delete_original, convert_to_webp
 
         # Check if the file is an image with .webp or .jpg extension
         if os.path.isfile(file_path) and (filename.lower().endswith('.webp') or filename.lower().endswith('.jpg')):
-            strip_metadata(file_path, delete_original, convert_to_webp, compression_percentage)
+            new_path = strip_metadata(file_path, delete_original)
+            if new_path:
+                converted_images.append(new_path)
 
-    print("Job complete.")
+    print("'°°°·.°·..·°¯°·._.··._.·°¯°·.·° .·°°°")
+    print("'°°°·.°·..·°¯°·._.··._.·°¯°·.·° .·°°°")
+    print("Success! Metadata Deleted from images.")
+    print("'°°°·.°·..·°¯°·._.··._.·°¯°·.·° .·°°°")
+    print("'°°°·.°·..·°¯°·._.··._.·°¯°·.·° .·°°°")
+
+    # Ask user if they want to convert JPEG/JPG files to WebP format
+    convert_to_webp_option = input("Do you want to convert JPEG/JPG files to WebP format? (y/n): ").strip().lower()
+    if convert_to_webp_option == 'y' or convert_to_webp_option == 'yes':
+        for image_path in converted_images:
+            convert_to_webp(os.path.dirname(image_path))
 
 def main():
     # Prompt user for the directory path
@@ -62,17 +82,8 @@ def main():
     delete_original = input("Do you want to delete the original files? (y/n): ").strip().lower()
     delete_original = delete_original == 'y' or delete_original == 'yes'
 
-    # Ask user if they want to convert JPEG/JPG files to WebP format
-    convert_to_webp = input("Do you want to convert JPEG/JPG files to WebP format? (y/n): ").strip().lower()
-    convert_to_webp = convert_to_webp == 'y' or convert_to_webp == 'yes'
-
-    compression_percentage = None
-    if convert_to_webp:
-        # Prompt user for compression percentage
-        compression_percentage = int(input("Enter compression percentage (0-100): ").strip())
-
     # Process images in the specified directory
-    process_images_in_directory(directory_path, delete_original, convert_to_webp, compression_percentage)
+    process_images_in_directory(directory_path, delete_original)
 
 if __name__ == "__main__":
     main()
